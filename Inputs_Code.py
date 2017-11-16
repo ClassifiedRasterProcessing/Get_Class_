@@ -7,6 +7,7 @@ User_Field = arcpy.GetParameterAsText(3)               # this is the string into
 User_Class = arcpy.GetParameterAsText(4)               # this is the string into which the user put the Class name
 Cell_Size= arcpy.GetParameterAsText(5)                 # future spot of the input of the cells size of the new feature class
 Ratio= arcpy.GetParameterAsText(6)                     # future spot of the input of the Ratio of the new feature class
+User_Field_Count= arcpy.GetParameterAsText(7)
 
 arcpy.AddMessage(Cell_Size)
 arcpy.AddMessage(Ratio)
@@ -40,7 +41,7 @@ if User_Field in Fields_List:
                 Class_List.append(i[0])                          # running through all of the Class and putting them in the Class_List
 Class_List.sort()    # just to make the output to look nice
 
-
+file_object.write(Class_List[0])
 # this runs through the Class list and matches it to the user input
 if User_Class in Class_List:
     file_object.write("Class Verified\n")
@@ -49,6 +50,9 @@ if User_Class in Class_List:
     file_object.write(Ratio)
     file_object.write(Cell_Size)
 
+arcpy.AddMessage(Fields_List)
+arcpy.AddMessage(Class_List)	
+	
 xy=Cell_Size.split(" ")
 arcpy.AddMessage(xy)
 X=xy[0]

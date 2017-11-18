@@ -16,13 +16,8 @@ Class_List=[]
 # nothing in this list yet, code not done
 Fields_List=[]
 #this is a text file that is for testing to see if it is outputting the right thing
-try:
-    file_object = open(output,'w')
-except IOError:
-    print("Not a raster Shapefile")
-else:
-    pass
-
+output1=output
+file_object = open(output1,'w')
 
 
 
@@ -35,13 +30,20 @@ if User_Field in Fields_List:
     file_object.write("Field Verified\n")                        # makes sure user put in the right field that have the class in them
     for i in Fields_List:
         file_object.write(i +"\n")
-    with arcpy.da.SearchCursor(input1,[User_Field]) as Classes:   # this goes through the field of User_Field to find all of the class and then put them in the CLass list
+    with arcpy.da.SearchCursor(input1,[User_Field]) as Classes: # this goes through the field of User_Field to find all of the class and then put them in the CLass list
         for i in Classes:
             if i[0] not in Class_List:
-                Class_List.append(i[0])                          # running through all of the Class and putting them in the Class_List
+                Class_List.append(i[0])                           # running through all of the Class and putting them in the Class_List
+            for i in Class_List:
+                file_object.write(str(i) +"\n")
+    del Classes
 Class_List.sort()    # just to make the output to look nice
 
-file_object.write(Class_List[0])
+ 
+
+arcpy.AddMessage(Class_List)
+arcpy.AddMessage(Fields_List)
+
 # this runs through the Class list and matches it to the user input
 if User_Class in Class_List:
     file_object.write("Class Verified\n")
@@ -50,6 +52,7 @@ if User_Class in Class_List:
     file_object.write(Ratio)
     file_object.write(Cell_Size)
 
+file_object.close()
 arcpy.AddMessage(Fields_List)
 arcpy.AddMessage(Class_List)	
 	
@@ -59,4 +62,5 @@ X=xy[0]
 Y=xy[1]
 
 Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
+arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
 Parameters.processRaster(output)

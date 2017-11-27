@@ -1,13 +1,13 @@
 import arcpy, Frame
 
 arcpy.env.workspace = arcpy.GetParameterAsText(0)      #this is where the files are to go
-input1= arcpy.GetParameterAsText(1)                     # this is where the feature class is put
+input1= arcpy.GetParameterAsText(1)                    # this is where the feature class is put
 output= arcpy.GetParameterAsText(2)                    # for right now this is where the text file is saved just for testing
 User_Field = arcpy.GetParameterAsText(3)               # this is the string into which the user put the Field name
 User_Class = arcpy.GetParameterAsText(4)               # this is the string into which the user put the Class name
-Cell_Size= arcpy.GetParameterAsText(5)                 # future spot of the input of the cells size of the new feature class
-Ratio= arcpy.GetParameterAsText(6)                     # future spot of the input of the Ratio of the new feature class
-User_Field_Count= arcpy.GetParameterAsText(7)
+Cell_Size= arcpy.GetParameterAsText(5)                 # input of the cells size of the new feature class
+Ratio= arcpy.GetParameterAsText(6)                     # input of the Ratio of the new feature class
+User_Field_Count= arcpy.GetParameterAsText(7)	       # column name for the frequency of each Field
 
 arcpy.AddMessage(Cell_Size)
 arcpy.AddMessage(Ratio)
@@ -21,20 +21,7 @@ file_object = open(output1,'w')
 
 
 
-X_X=int(arcpy.GetRasterProperties_management(input1, "COLUMNCOUNT")[0])
 
-Y_Y=int(arcpy.GetRasterProperties_management(input1, "ROWCOUNT")[0]) 
-
-arcpy.AddMessage(X_X)
-arcpy.AddMessage(Y_Y)
-
-x_res = float(arcpy.GetRasterProperties_management(input1, "CELLSIZEX")[0])
-y_res = float(arcpy.GetRasterProperties_management(input1, "CELLSIZEY")[0])
-
-arcpy.AddMessage(x_res)
-arcpy.AddMessage(y_res)
-
-arcpy.env.cellSize = 20
 
 Fields=arcpy.ListFields(input1)
 for i in Fields:
@@ -54,6 +41,9 @@ Class_List.sort()    # just to make the output to look nice
 
  
 
+arcpy.AddMessage(Class_List)
+arcpy.AddMessage(Fields_List)
+
 # this runs through the Class list and matches it to the user input
 if User_Class in Class_List:
     file_object.write("Class Verified\n")
@@ -62,7 +52,9 @@ if User_Class in Class_List:
     file_object.write(Ratio)
     file_object.write(Cell_Size)
 
-file_object.close()	
+file_object.close()
+arcpy.AddMessage(Fields_List)
+arcpy.AddMessage(Class_List)	
 	
 xy=Cell_Size.split(" ")
 arcpy.AddMessage(xy)
@@ -71,4 +63,4 @@ Y=xy[1]
 
 Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
 arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
-Parameters.processRaster(output)
+Parameters.processRaster(output, User_Field_Count)

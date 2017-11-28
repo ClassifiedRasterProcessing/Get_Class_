@@ -61,6 +61,6 @@ arcpy.AddMessage(xy)
 X=xy[0]
 Y=xy[1]
 
-Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class, User_Field)
+Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
 arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
-Parameters.processRaster(output, User_Field_Count , Class_List)
+Parameters.processRaster(output, User_Field_Count , Class_List,User_Field)

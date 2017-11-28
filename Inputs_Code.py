@@ -9,8 +9,8 @@ Cell_Size= arcpy.GetParameterAsText(5)                 # input of the cells size
 Ratio= arcpy.GetParameterAsText(6)                     # input of the Ratio of the new feature class
 User_Field_Count= arcpy.GetParameterAsText(7)	       # column name for the frequency of each Field
 
-arcpy.AddMessage(Cell_Size)
-arcpy.AddMessage(Ratio)
+#arcpy.AddMessage(Cell_Size)
+#arcpy.AddMessage(Ratio)
 #list for the class in the shape file
 Class_List=[]
 # nothing in this list yet, code not done
@@ -41,8 +41,8 @@ Class_List.sort()    # just to make the output to look nice
 
  
 
-arcpy.AddMessage(Class_List)
-arcpy.AddMessage(Fields_List)
+#arcpy.AddMessage(Class_List)
+#arcpy.AddMessage(Fields_List)
 
 # this runs through the Class list and matches it to the user input
 if User_Class in Class_List:
@@ -53,14 +53,14 @@ if User_Class in Class_List:
     file_object.write(Cell_Size)
 
 file_object.close()
-arcpy.AddMessage(Fields_List)
-arcpy.AddMessage(Class_List)	
+#arcpy.AddMessage(Fields_List)
+#arcpy.AddMessage(Class_List)	
 	
 xy=Cell_Size.split(" ")
-arcpy.AddMessage(xy)
+#arcpy.AddMessage(xy)
 X=xy[0]
 Y=xy[1]
 
 Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
-arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
+#arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
 Parameters.processRaster(output, User_Field_Count , Class_List,User_Field)

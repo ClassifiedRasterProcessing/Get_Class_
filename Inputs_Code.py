@@ -8,6 +8,7 @@ User_Class = arcpy.GetParameterAsText(4)               # this is the string into
 Cell_Size= arcpy.GetParameterAsText(5)                 # input of the cells size of the new feature class
 Ratio= arcpy.GetParameterAsText(6)                     # input of the Ratio of the new feature class
 User_Field_Count= arcpy.GetParameterAsText(7)	       # column name for the frequency of each Field
+User_Field_Value= arcpy.GetParameterAsText(8)	       # column name for the classifications
 
 arcpy.AddMessage(Cell_Size)
 arcpy.AddMessage(Ratio)
@@ -61,6 +62,6 @@ arcpy.AddMessage(xy)
 X=xy[0]
 Y=xy[1]
 
-Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
+Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class, User_Field_Value)
 arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
 Parameters.processRaster(output, User_Field_Count , Class_List)

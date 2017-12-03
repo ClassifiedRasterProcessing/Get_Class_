@@ -9,55 +9,42 @@ Cell_Size= arcpy.GetParameterAsText(5)                 # input of the cells size
 Ratio= arcpy.GetParameterAsText(6)                     # input of the Ratio of the new feature class
 User_Field_Count= arcpy.GetParameterAsText(7)	       # column name for the frequency of each Field
 
-#arcpy.AddMessage(Cell_Size)
-#arcpy.AddMessage(Ratio)
+
 #list for the class in the shape file
 Class_List=[]
 # nothing in this list yet, code not done
 Fields_List=[]
 #this is a text file that is for testing to see if it is outputting the right thing
-output1=output
-file_object = open(output1,'w')
-
-
-
 
 
 Fields=arcpy.ListFields(input1)
-for i in Fields:
-    Fields_List.append(i.name)                                   # putting all of the Field in the feature class into the Fields_List
-if User_Field in Fields_List:
-    file_object.write("Field Verified\n")                        # makes sure user put in the right field that have the class in them
-    for i in Fields_List:
-        file_object.write(i +"\n")
-    with arcpy.da.SearchCursor(input1,[User_Field]) as Classes: # this goes through the field of User_Field to find all of the class and then put them in the CLass list
-        for i in Classes:
-            if i[0] not in Class_List:
-                Class_List.append(i[0])                           # running through all of the Class and putting them in the Class_List
-            for i in Class_List:
-                file_object.write(str(i) +"\n")
-    del Classes
+try:
+	for i in Fields:
+		Fields_List.append(i.name)                                   # putting all of the Field in the feature class into the Fields_List
+	if User_Field in Fields_List:                                    # makes sure user put in the right field that have the class in them
+		with arcpy.da.SearchCursor(input1,[User_Field]) as Classes: # this goes through the field of User_Field to find all of the class and then put them in the CLass list
+			for i in Classes:
+				if i[0] not in Class_List:
+					Class_List.append(i[0])                           # running through all of the Class and putting them in the Class_List
+		del Classes
+except:
+	arcpy.AddMessage("error with Field name(check spelling)")
 Class_List.sort()    # just to make the output to look nice
 
- 
-
-#arcpy.AddMessage(Class_List)
-#arcpy.AddMessage(Fields_List)
-
 # this runs through the Class list and matches it to the user input
-if User_Class in Class_List:
-    file_object.write("Class Verified\n")
-    for i in Class_List:
-        file_object.write(i+"\n")
-    file_object.write(Ratio)
-    file_object.write(Cell_Size)
+try:
+	if User_Class in Class_List:
+		arcpy.AddMessage("Class Verified")
+except:
+	arcpy.AddMessage("error with Value/Class (check spelling)")
 
-file_object.close()
+
+
+
 #arcpy.AddMessage(Fields_List)
 #arcpy.AddMessage(Class_List)	
 	
 xy=Cell_Size.split(" ")
-#arcpy.AddMessage(xy)
 X=xy[0]
 Y=xy[1]
 

@@ -12,42 +12,50 @@ User_Field_Count= arcpy.GetParameterAsText(7)	       # column name for the frequ
 
 #list for the class in the shape file
 Class_List=[]
-# nothing in this list yet, code not done
+#nothing in this list yet, code not done
 Fields_List=[]
 #this is a text file that is for testing to see if it is outputting the right thing
-
+Validation = True
 
 Fields=arcpy.ListFields(input1)
-try:
+try:                                                                 # makeing sure the user put in the right Field name
 	for i in Fields:
 		Fields_List.append(i.name)                                   # putting all of the Field in the feature class into the Fields_List
 	if User_Field in Fields_List:                                    # makes sure user put in the right field that have the class in them
-		with arcpy.da.SearchCursor(input1,[User_Field]) as Classes: # this goes through the field of User_Field to find all of the class and then put them in the CLass list
+		arcpy.AddMessage("Field Verified")
+		with arcpy.da.SearchCursor(input1,[User_Field]) as Classes:  # this goes through the field of User_Field to find all of the class and then put them in the CLass list
 			for i in Classes:
 				if i[0] not in Class_List:
-					Class_List.append(i[0])                           # running through all of the Class and putting them in the Class_List
-		del Classes
-except:
-	arcpy.AddMessage("error with Field name(check spelling)")
-Class_List.sort()    # just to make the output to look nice
-
-# this runs through the Class list and matches it to the user input
-try:
-	if User_Class in Class_List:
-		arcpy.AddMessage("Class Verified")
-except:
-	arcpy.AddMessage("error with Value/Class (check spelling)")
-
-
-
-
-#arcpy.AddMessage(Fields_List)
-#arcpy.AddMessage(Class_List)	
+					Class_List.append(i[0])					         # running through all of the Class and putting them in the Class_List
 	
-xy=Cell_Size.split(" ")
+		del Classes			
+	else:
+		raise ValueError
+		
+except ValueError:
+	arcpy.AddMessage("Error with Field name(check spelling)")
+	Validation = False
+	
+Class_List.sort()                                                   # just to make the output to look nice
+
+if Validation:                                                      # makeing sure that the User put in the right Class
+	try:
+		if int(User_Class) in Class_List:
+			arcpy.AddMessage("Class Verified")
+		else:
+			raise ValueError
+		
+	except ValueError:
+		arcpy.AddMessage("Error with Value/Class (check spelling)")
+		Validation = False
+
+#spliting the user x & y inputs into its own variable 
+xy=Cell_Size.split(" ") 
 X=xy[0]
 Y=xy[1]
 
-Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
-#arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
-Parameters.processRaster(output, User_Field_Count , Class_List,User_Field,Fields_List)
+# checking to see if the user put in the right class and field name to do the rest of the code
+if Validation:
+	Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
+	#arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
+	Parameters.processRaster(output, User_Field_Count , Class_List,User_Field,Fields_List)

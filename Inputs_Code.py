@@ -49,6 +49,19 @@ if Validation:                                                      # makeing su
 		arcpy.AddMessage("Error with Value/Class (check spelling)")
 		Validation = False
 
+if Validation:                                                      # making sure the user put in the right field for the pixle count
+	try:
+		if User_Field_Count in Fields_List:
+			arcpy.AddMessage("Field 2 Verified")
+		else:
+			raise ValueError
+			
+	except ValueError:
+		arcpy.AddMessage("Error with Field / Column Name for pixel count (check spelling)")
+		Validation = False
+		
+		
+		
 #spliting the user x & y inputs into its own variable 
 xy=Cell_Size.split(" ") 
 X=xy[0]

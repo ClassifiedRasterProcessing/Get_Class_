@@ -1,4 +1,4 @@
-import arcpy, Frame
+import arcpy, Frame, time
 
 arcpy.env.workspace = arcpy.GetParameterAsText(0)      #this is where the files are to go
 input1= arcpy.GetParameterAsText(1)                    # this is where the feature class is put
@@ -8,7 +8,6 @@ User_Class = arcpy.GetParameterAsText(4)               # this is the string into
 Cell_Size= arcpy.GetParameterAsText(5)                 # input of the cells size of the new feature class
 Ratio= arcpy.GetParameterAsText(6)                     # input of the Ratio of the new feature class
 User_Field_Count= arcpy.GetParameterAsText(7)	       # column name for the frequency of each Field
-
 
 #list for the class in the shape file
 Class_List=[]
@@ -69,6 +68,10 @@ Y=xy[1]
 
 # checking to see if the user put in the right class and field name to do the rest of the code
 if Validation:
+	start_time = time.clock()
 	Parameters = Frame.classifiedRaster(input1,X,Y,Ratio,User_Class)
 	#arcpy.AddMessage(str(input1) + " " + str(X) + " " + str(Y) + " " + str(Ratio) + " " + str(User_Class))
 	Parameters.processRaster(output, User_Field_Count , Class_List,User_Field,Fields_List)
+	
+	runtime = "%s seconds" % (round(time.clock() - start_time,2))#Calculates runtime
+	arcpy.AddMessage("Total runtime: " + runtime)#outputs runtime
